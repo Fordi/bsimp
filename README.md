@@ -116,10 +116,10 @@ Note: because of the need for implicit AND,
 the parser limits terms to single-letter, case-sensitive.  The simplifier is not so-limited, and you can do something like this:
 
 ```javascript
-const syms = {
-  a, term('longName'),
-  b, term('longerName'),
-};
+const [a, b] = [
+  term('longName'),
+  term('longerName'),
+];
 const simple = simplify([OR, a, [AND, a, [NOT, b]]]);
 ```
 
