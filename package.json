@@ -1,6 +1,6 @@
 {
   "name": "@fordi-org/bsimp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A boolean expression simplifier",
   "repository": "https://github.com/fordi/bsimp",
   "source": "./src/bsimp.mjs",

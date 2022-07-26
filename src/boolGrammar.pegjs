@@ -19,8 +19,9 @@ PolishExpression
   = op:Operation operands:PolishOperand+ {
     if (op === 'AND_NOT' || op === 'OR_NOT') {
       return [
-        op.substring(1),
-        ...operands.map(t => ['NOT', t])
+        op.replace(/_NOT$/, ''),
+        operands[0],
+        ...operands.slice(1).map(t => ['NOT', t])
       ];
     }
     return [op, ...operands];

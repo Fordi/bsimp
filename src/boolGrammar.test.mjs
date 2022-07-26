@@ -20,5 +20,9 @@ describe('parse', () => {
   });
   it('parses a union of groups in set notation', () => {
     expect(parser.parse('(C ∖ A) ∪ (B ∩ C)')).toEqual(region_0x70);
-  })
+  });
+  it('parses polish nand / nor sensibly', () => {
+    expect(parser.parse('\\ A B C')).toEqual(['AND', 'A', ['NOT', 'B'], ['NOT', 'C']]);
+    expect(parser.parse('- A B C')).toEqual(['OR', 'A', ['NOT', 'B'], ['NOT', 'C']]);
+  });
 });
