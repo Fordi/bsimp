@@ -131,13 +131,13 @@ The two use cases I had in mind were a boolean simplifier for linters (where the
 
 To run the test suite:
 
-```bash
+```
 npm run test
 ```
 
 To compile the boolean grammar:
 
-```bash
+```
 npm run build:peg
 ```
 
