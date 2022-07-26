@@ -1,0 +1,5 @@
+build/*
+.nvmrc
+.eslintrc.json
+**/*.test.mjs
+**/*.snap

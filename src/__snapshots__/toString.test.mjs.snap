@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`toString serializes expressions in logic notation 1`] = `"ABC+A!B!C"`;
+
+exports[`toString serializes expressions in logic notation 2`] = `"ABC+A!B!C"`;
+
+exports[`toString serializes expressions in logic notation 3`] = `"C!A+BC"`;
+
+exports[`toString serializes expressions in logic notation 4`] = `"C!A+BC"`;
+
+exports[`toString serializes expressions in logic notation 5`] = `"10"`;
+
+exports[`toString serializes expressions in logic notation 6`] = `"10"`;
+
+exports[`toString serializes expressions in logic notation 7`] = `"∅"`;
+
+exports[`toString serializes expressions in logic notation 8`] = `"∅"`;
+
+exports[`toString serializes expressions in pasteable 1`] = `"[OR, [AND, A, B, C], [AND, A, [NOT, B], [NOT, C]]]"`;
+
+exports[`toString serializes expressions in pasteable 2`] = `"[OR, [AND, A, B, C], [AND, A, [NOT, B], [NOT, C]]]"`;
+
+exports[`toString serializes expressions in pasteable 3`] = `"[OR, [AND, C, [NOT, A]], [AND, B, C]]"`;
+
+exports[`toString serializes expressions in pasteable 4`] = `"[OR, [AND, C, [NOT, A]], [AND, B, C]]"`;
+
+exports[`toString serializes expressions in pasteable 5`] = `"[AND, TRUE, FALSE]"`;
+
+exports[`toString serializes expressions in pasteable 6`] = `"[AND, TRUE, FALSE]"`;
+
+exports[`toString serializes expressions in pasteable 7`] = `"undefined"`;
+
+exports[`toString serializes expressions in pasteable 8`] = `"undefined"`;
+
+exports[`toString serializes expressions in polish notation 1`] = `"(∪ (∩ A B C) (∩ A !B !C))"`;
+
+exports[`toString serializes expressions in polish notation 2`] = `"(∪ (∩ A B C) (∩ A !B !C))"`;
+
+exports[`toString serializes expressions in polish notation 3`] = `"(∪ (∩ C !A) (∩ B C))"`;
+
+exports[`toString serializes expressions in polish notation 4`] = `"(∪ (∩ C !A) (∩ B C))"`;
+
+exports[`toString serializes expressions in polish notation 5`] = `"(∩ TRUE FALSE)"`;
+
+exports[`toString serializes expressions in polish notation 6`] = `"(∩ TRUE FALSE)"`;
+
+exports[`toString serializes expressions in polish notation 7`] = `"()"`;
+
+exports[`toString serializes expressions in polish notation 8`] = `"()"`;
+
+exports[`toString serializes expressions in set notation 1`] = `"(A ∩ B ∩ C) ∪ (A ∖ B ∖ C)"`;
+
+exports[`toString serializes expressions in set notation 2`] = `"(A ∩ B ∩ C) ∪ (A ∖ B ∖ C)"`;
+
+exports[`toString serializes expressions in set notation 3`] = `"(C ∖ A) ∪ (B ∩ C)"`;
+
+exports[`toString serializes expressions in set notation 4`] = `"(C ∖ A) ∪ (B ∩ C)"`;
+
+exports[`toString serializes expressions in set notation 5`] = `"TRUE ∩ FALSE"`;
+
+exports[`toString serializes expressions in set notation 6`] = `"TRUE ∩ FALSE"`;
+
+exports[`toString serializes expressions in set notation 7`] = `"Empty set"`;
+
+exports[`toString serializes expressions in set notation 8`] = `"Empty set"`;

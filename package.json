@@ -1,0 +1,36 @@
+{
+  "name": "@fordi-org/bsimp",
+  "version": "1.0.0",
+  "description": "A boolean expression simplifier",
+  "source": "./src/bsimp.mjs",
+  "exports": {
+    ".": "./dist/bsimp.modern.mjs",
+    "./parse": "./dist/parse.modern.mjs",
+    "./simplify": "./dist/simplify.modern.mjs"
+  },
+  "main": "./dist/bsimp.js",
+  "module": "./dist/bsimp.module.mjs",
+  "unpkg": "./dist/bsimp.umd.js",
+  "scripts": {
+    "build:peg": "node build/compileGrammar.mjs",
+    "build": "npm run build:peg && microbundle src/parse.mjs src/simplify.mjs src/bsimp.mjs",
+    "test": "npm run build:peg && NODE_OPTIONS=--experimental-vm-modules jest",
+    "publish": "npm run build"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "microbundle": "^0.15.0",
+    "eslint": "^8.20.0",
+    "jest": "^28.1.3",
+    "pegjs": "^0.10.0"
+  },
+  "jest": {
+    "testMatch": [
+      "**/?(*.)+(spec|test).(mjs|js)"
+    ]
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
