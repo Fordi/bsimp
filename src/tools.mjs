@@ -1,4 +1,5 @@
-import { AND, FALSE, KEYWORDS, NOT, OR, TRUE } from "./consts.mjs";
+import { AND, FALSE, KEYWORDS, NOT, OR, TRUE } from './consts.mjs';
+import Symbol, { isSymbol } from './Symbol.mjs';
 
 const OPERATORS = { [AND]: AND, [OR]: OR, [NOT]: NOT };
 
@@ -8,7 +9,7 @@ export const isExpression = exp => Array.isArray(exp) && !!OPERATORS[exp[0]];
 export const isOr = exp => isExpression(exp) && exp[0] === OR;
 export const isAnd = exp => isExpression(exp) && exp[0] === AND;
 export const isNot = exp => isExpression(exp) && exp[0] === NOT && !!exp[1];
-export const isSymbol = exp => typeof exp === 'symbol';
+export { isSymbol };
 
 // Whether `expression` contains `subexpression`
 export const contains = (expression, subexpression) => (

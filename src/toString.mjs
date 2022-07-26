@@ -1,5 +1,6 @@
 import { AND, FALSE, NOT, OR, TRUE } from './consts.mjs';
 import { isExpression } from './tools.mjs';
+import Symbol from './Symbol.mjs';
 
 export const SET = Symbol('set notation');
 export const POLISH = Symbol('polish notation');

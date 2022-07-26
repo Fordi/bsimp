@@ -1,3 +1,5 @@
+import Symbol from './Symbol.mjs';
+
 export const AND = Symbol(' ∩ ');
 export const OR = Symbol(' ∪ ');
 export const NOT = Symbol('!');
