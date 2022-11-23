@@ -16,9 +16,9 @@ export const contains = (expression, subexpression) => (
   expression.slice(1).some(se => areEqual(se, subexpression))
 );
 
-export const areEqual = (e1, e2, inv = true) => {
+export const areEqual = (e1, e2, involute = true) => {
   
-  if (inv) {
+  if (involute) {
     // treat !!EXP as EXP
     [e1, e2] = [e1, e2].map(e => involution(e));
   }

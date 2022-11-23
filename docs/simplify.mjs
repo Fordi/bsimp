@@ -1,10 +1,10 @@
 import { areEqual, isExpression, isSymbol, sortExpr, term } from './tools.mjs';
-import toString, { LOGIC, POLISH, SET, SOURCE } from "./toString.mjs";
+import toString, { LOGIC, POLISH, SET, SOURCE, CODE } from "./toString.mjs";
 import transforms from './transforms/index.mjs';
 export * from './consts.mjs';
 export * from './tools.mjs';
 
-export { term, toString, LOGIC, POLISH, SET, SOURCE };
+export { term, toString, LOGIC, POLISH, SET, SOURCE, CODE };
 
 // Turn on for debugging...
 let LOG = false;

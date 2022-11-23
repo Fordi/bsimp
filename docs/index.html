@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Boolean Simplifier Demo</title>
+  </head>
+  <body style="max-width: 6in; margin: 0 auto; font: 16px sans-serif">
+    <h1>Boolean simplifier</h1>
+
+    <form>
+      Enter expression:<br />
+      <textarea style="width: 100%" name="input"></textarea><br />
+      Output style: <select name="mode">
+        <option>LOGIC</option>
+        <option>SET</option>
+        <option>POLISH</option>
+        <option>CODE</option>
+        <option>SOURCE</option>
+      </select><br />
+      <button>Simplify</button><br />
+      <div class="error" style="color: red"></div>
+      Simplified:<br />
+      <textarea style="width: 100%" name="output" readonly></textarea>
+    </form>
+    <a href="./boolGrammar.html" target="_blank">Grammar diagram</a>
+    <script type="module">
+      import { parse, simplify, toString, SET, LOGIC, POLISH, SOURCE, CODE } from "./bsimp.mjs";
+      const lookup = { SET, LOGIC, POLISH, SOURCE, CODE };
+      const form = document.querySelector('form');
+      const process = () => {
+        const expr = form.querySelector('[name="input"]').value
+        const mode = form.querySelector('[name="mode"]').value;
+        const e = parse(expr);
+        const s = simplify(e);
+        const out = toString(s, lookup[mode]);
+        document.querySelector('[name="output"]').value = out;
+      };
+      const submit = (event) => {
+        const err = form.querySelector('.error');
+        try {
+          err.textContent = '';
+          process();
+        } catch (e) {
+          err.textContent = e.message;
+        }
+        event.preventDefault();
+        return false;
+      };
+      form.addEventListener('submit', submit);
+      form.querySelector('select').addEventListener('change', () => {
+        try {
+          process();
+        } catch (e) { /*  */ }
+      });
+      form.querySelector('textarea').addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && event.ctrlKey) {
+          submit(event);
+        }
+      });
+    </script>
+  </body>
+</html>

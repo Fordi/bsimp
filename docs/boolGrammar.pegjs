@@ -1,6 +1,11 @@
-LooseExpression = _ expr:(PolishExpression / Expression) _ { return expr; }
+LooseExpression
+  = _ expr:(Ternary / PolishExpression / Expression) _ {
+    return expr;
+  }
 
-Expression = Union / Group
+Expression
+  = Union
+  / Group
 
 Group
   = '(' expr:LooseExpression ')' { return expr; }
@@ -10,7 +15,9 @@ TerseInversion
   = InvertOperation f:Term
 
 Inversion
-  = InvertOperation f:(Group / Symbol / Boolean / Inversion) { return ['NOT', f] }
+  = InvertOperation f:(Group / Symbol / Boolean / Inversion) {
+    return ['NOT', f];
+  }
 
 PolishOperand
   = Separator expr:Expression { return expr; }
@@ -31,13 +38,18 @@ UnionPart
   = _ o:UnionOperation _ t:Intersection { return [o, t]; }
 
 Union
- = head:Intersection tail:UnionPart* {
+  = head:Intersection tail:UnionPart* {
     return (
       tail.length === 0
       ? head
       : ['OR', head, ...tail.map((e) => e[0] === 'OR_NOT' ? ['NOT', e[1]] : e[1])]
     );
- }
+  }
+
+Ternary
+  = c:Term _ '?' _ t:Term _ ':' _ f:Term {
+    return ['OR', ['AND', c, t], ['AND', ['NOT', c], f]];
+ } 
 
 Term
   = Group

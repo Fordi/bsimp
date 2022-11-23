@@ -1,4 +1,9 @@
 /* globals expect */
+/*
+import peg from 'pegjs';
+import { readFileSync } from 'fs';
+const parser = peg.generate(readFileSync(new URL('./boolGrammar.pegjs', import.meta.url).pathname, 'utf-8'));
+*/
 import parser from './boolGrammar.mjs';
 
 const region_0x03 = ['OR', ['AND', 'A', 'B', 'C'], ['AND', 'A', ['NOT', 'B'], ['NOT', 'C']]];
@@ -24,5 +29,8 @@ describe('parse', () => {
   it('parses polish nand / nor sensibly', () => {
     expect(parser.parse('\\ A B C')).toEqual(['AND', 'A', ['NOT', 'B'], ['NOT', 'C']]);
     expect(parser.parse('- A B C')).toEqual(['OR', 'A', ['NOT', 'B'], ['NOT', 'C']]);
+  });
+  it('parses ternaries as logic', () => {
+    expect(parser.parse('a ? b : c')).toEqual(['OR', ['AND', 'a', 'b'], ['AND', ['NOT', 'a'], 'c']]);
   });
 });

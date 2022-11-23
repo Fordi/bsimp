@@ -1,22 +1,14 @@
 import peg from 'pegjs';
-import { readFile, writeFile } from 'fs/promises';
 
-const parser = peg.generate(await readFile('src/boolGrammar.pegjs', 'utf-8'), {
-  output: 'source',
-  format: 'commonjs',
-});
+import { readFile, writeFile, mkdir } from 'fs/promises';
 
-const generateModern = async file => {
-  await writeFile(
-    file.replace(/\.pegjs$/, '.mjs'),
-    peg
-      .generate(
-        await readFile(file, 'utf-8'),
-        { output: 'source', format: 'commonjs' },
-      )
-      .replace(/\nmodule\.exports = /, '\nexport default '),
-    'utf-8',
-  )
-};
+const grammarSrc = await readFile('docs/boolGrammar.pegjs', 'utf-8');
 
-generateModern('src/boolGrammar.pegjs');
+await writeFile(
+  'docs/boolGrammar.mjs',
+  peg.generate(grammarSrc, {
+    output: 'source',
+    format: 'commonjs',
+  }).replace(/\nmodule\.exports = /, '\nexport default '),
+  'utf-8',
+);

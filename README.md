@@ -104,6 +104,16 @@ e.g.,
 
 `(P | Q | R)` becomes `[OR, P, Q, R]`
 
+### Ternary
+
+The parser understands Ternary expressions, and the `CODE` stringifier knows how to convert expressions to them, however, they are expressed as a logical combination of `AND`, `OR`, and `NOT`.  A ternary, if you're unaware, is like an if / then / else statment, where each piece is a term.
+
+So, `C ? T : F` evaluates to `[OR, [AND, C, T], [AND, [NOT, C], F]]`.  You can nest ternaries, but they must be grouped to avoid ambiguity.
+
+Support for ternaries is meant to be an assist in passing expressions into the simplifier - while the `CODE` stringifier can identify and subsume the simple form of this pattern, nested ternaries will usually be simplified into something the `CODE` stringifier cannot identify (for example, `a ? (b ? c : d) : e` will become `(a && b && c) || (e && !a) || (a && !b && d)`, which is not ideal).
+
+I may work more on this, but ternary support was initially meant to be for input.
+
 ### Implicit AND
 
 `{TERM}{TERM}*`

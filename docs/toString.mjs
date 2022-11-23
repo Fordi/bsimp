@@ -1,11 +1,12 @@
 import { AND, FALSE, NOT, OR, TRUE } from './consts.mjs';
-import { isExpression } from './tools.mjs';
+import { areEqual, invert, isExpression, isNot } from './tools.mjs';
 import Symbol from './Symbol.mjs';
 
 export const SET = Symbol('set notation');
 export const POLISH = Symbol('polish notation');
 export const LOGIC = Symbol('logic notation');
 export const SOURCE = Symbol('pasteable');
+export const CODE = Symbol('programming');
 
 let defaultNotation = SET;
 
@@ -25,6 +26,62 @@ const toSetString = exp => {
     Object.defineProperty(exp, SET, { value });
   }
   return exp[SET];
+};
+
+const asTernary = exp => {
+  if (exp[0] !== OR) return;
+  if (exp.length !== 3) return;
+  if (exp[1][0] !== AND || exp[2][0] !== AND) return;
+  if (exp[1].length !== 3 || exp[2].length !== 3) return;
+  for (let i = 1; i < 3; i++) {
+    for (let j = 1; j < 3; j++) {
+      if (areEqual(exp[1][i], invert(exp[2][j]), true)) {
+        if (!isNot(exp[1][i])) {
+          return [
+            exp[1][i],
+            exp[1][3 - i],
+            exp[2][3 - j],
+          ];
+        } else {
+          return [
+            exp[2][j],
+            exp[2][3 - j],
+            exp[1][3 - i],
+          ];
+        }
+      }
+    }
+  }
+};
+
+const toCodeString = exp => {
+  if (typeof exp === 'symbol') {
+    if (exp === NOT) return '!';
+    if (exp === AND) return ' && ';
+    if (exp === OR) return ' || ';
+    if (exp === TRUE || exp === FALSE) {
+      return exp.description.toLowerCase();
+    }
+    return exp.description;
+  }
+  if (isExpression(exp) && exp.length === 1) {
+    return 'undefined';
+  }
+
+  if (!exp[CODE]) {
+    const t = asTernary(exp);
+    if (t) {
+      exp[CODE] = `(${toCodeString(t[0])} ? ${toCodeString(t[1])} : ${toCodeString(t[2])})`;
+      return exp[CODE];
+    }
+  
+    const [operation, ...operands] = exp;
+    const value = operation === NOT
+      ? (toCodeString(operation) + toCodeString(operands[0]))
+      : `(${operands.map(toCodeString).join(toCodeString(operation))})`;
+    Object.defineProperty(exp, CODE, { value });
+  }
+  return exp[CODE];
 };
 
 export const toPolishString = exp => {
@@ -110,6 +167,9 @@ const toString = (exp, mode) => {
       toLogicString(exp)
         .replace(/^\((.*)\)$/g, '$1')
     );
+  }
+  if (m === CODE) {
+    return toCodeString(exp).replace(/^\((.*)\)$/g, '$1');
   }
   return toSource(exp);
 };
