@@ -2,6 +2,8 @@
 
 A boolean expression simplifier
 
+[Demo](https://fordi.github.io/bsimp)
+
 ## parse(string)
 
 Convert a string representation of a logical expression into an expression object
