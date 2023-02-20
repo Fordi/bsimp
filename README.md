@@ -42,9 +42,9 @@ console.log(toString(parse('A+A!B'), SOURCE));
 > [OR, A, [AND, A, [NOT, B]]]
 > ```
 
-## simplify(expression)
+## simplify(expression, \[steps\])
 
-Simplify a symbolized boolean expression.
+Simplify a symbolized boolean expression.  Optionally, pass an array to collect steps.
 
 ```javascript
 import { simplify, parse, toString, LOGIC } from '@fordi-org/bsimp/simplify';
@@ -53,18 +53,41 @@ const toSimplify = [
   'A+B!C+C!A',
   'AB!C+ABC+A!B!C+B!A!C',
 ];
+
 const result = toSimplify.map(expStr => {
   const exp = parse(expStr);
-  const simple = simplify(exp);
-  return toString(simple, LOGIC);
+  const steps = [];
+  const simple = simplify(exp, steps);
+  return {
+    simplified: toString(simple, LOGIC),
+    steps,
+  };
 });
 
 console.log(result);
 ```
 
 > ```
-> [ 'A+B+C', 'AB+A!C+B!C' ]
+> [ 
+>   {
+>     simplified: 'A+B+C',
+>     steps: [
+>       [
+>         'absorption',
+>         null,
+>         [OR, A, [AND, B, [NOT, C]], [AND, C, [NOT, A]]],
+>         [OR, A, C, B]
+>       ]
+>     ]
+>   },
+>   {
+>     simplified: 'AB+A!C+B!C',
+>     steps: [...],
+>   }
+> ]
 > ```
+
+The structure of a step is a tuple of [`transform`, `parentOperation`, `fromExpr`, `toExpr`].
 
 ## symbolize(termStr)
 

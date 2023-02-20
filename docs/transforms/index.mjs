@@ -15,6 +15,7 @@ import distribute from './distribute.mjs';
 
 export default {
   unwrap,
+  consensus,
   involution,
   tautology,
   identity,
@@ -24,5 +25,4 @@ export default {
   absorption,
   distribute,
   collect,
-  consensus,
 };
