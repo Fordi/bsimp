@@ -8,25 +8,7 @@ import { Steps } from './Steps.mjs';
 import { ForeignDocument } from './ForeignDocument.mjs';
 import { VennIcon } from './VennIcon.mjs';
 import { ShortcutIcon } from './ShortcutIcon.mjs';
-
-const PegError = ({ error, expr }) => {
-  if (!error) return null;
-  return html`
-    <div class="error">
-      ${error?.message}
-      ${error?.location && html`
-        <pre>
-          ${expr}
-          ${'\n'}
-          ${new Array(error.location.start.offset).join(' ')}
-          ${'>'}
-          ${new Array(error.location.end.offset - error.location.start.offset + 1).join(' ')}
-          ${'<'}
-        </pre>
-      `}
-    </div>
-  `;
-};
+import { PegError } from './PegError.mjs';
 
 export const App = () => {
   const inpRef = useRef(null);
@@ -42,7 +24,15 @@ export const App = () => {
     setExpr(inpRef.current.value);
   };
   useEffect(() => {
-    if (!expr) return;
+    if (!expr) {
+      setOut('');
+      setSteps([]);
+      setError(null);
+      requestAnimationFrame(() => {
+        inpRef.current.focus();
+      });
+      return;
+    }
     try {
       const e = parse(expr);
       const steps = [];
