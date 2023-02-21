@@ -30,6 +30,11 @@ const indent = () => new Array(depth + 1).join('  ');
 const pass = (exp, p, steps) => {
   // Symbols cannot be further simplified
   if (isSymbol(exp)) return exp;
+  const nexp = sortExpr(exp);
+  if (!areEqual(nexp, exp)) {
+    steps.push(['sort', p, exp, nexp]);
+    exp = nexp;
+  }
   // Normalize the expression by simplifying its children and ordering it consistently.
   exp = sortExpr(simplifySubexpressions(exp, steps));
   // Loop through the transforms
@@ -54,7 +59,7 @@ const pass = (exp, p, steps) => {
   return exp;
 };
 
-export const simplify = (exp, steps, p = null) => {
+export const simplify = (exp, steps = [], p = null) => {
   // Symbols cannot be simplified
   if (isSymbol(exp)) return exp;
   let next;

@@ -182,3 +182,10 @@ To build the whole thing:
 npm run build
 ```
 
+To run the demo site locally:
+
+```
+npx http-serve docs
+```
+
+

@@ -2,183 +2,20 @@
 <html>
   <head>
     <title>Boolean Simplifier Demo</title>
-    <style>
-      body {
-        max-width: 6in;
-        min-height: 100vh;
-        margin: 0 auto;
-        font: 16px sans-serif;
-        display: flex;
-        flex-direction: column;
+    <link rel="stylesheet" href="./demo/index.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "preact": "https://unpkg.com/preact/src/index.js",
+          "preact/hooks": "https://unpkg.com/preact/hooks/src/index.js",
+          "htm": "https://unpkg.com/htm/src/index.mjs",
+          "@fordi-org/bsimp": "./bsimp.mjs"
+        }
       }
-      form {
-        flex: 0 0 auto;
-      }
-      iframe {
-        flex: 1 1 auto;
-      }
-      .rule {
-        padding-top: 0 !important;
-      }
-    </style>
+    </script>
   </head>
   <body>
-    <h1>Boolean simplifier</h1>
-    <a href="https://github.com/Fordi/bsimp">API Documentation</a>
-    <form>
-      <label for="input">
-        <div>Enter expression:</div>
-        <textarea style="width: 100%" name="input" id="input"></textarea>
-      </label>
-      <label for="mode">
-        <span>
-          Output style:
-        </span>
-        <select name="mode" id="mode">
-          <option>LOGIC</option>
-          <option>SET</option>
-          <option>POLISH</option>
-          <option>CODE</option>
-          <option>SOURCE</option>
-        </select>
-      </label>
-      <div class="actions">
-        <button>Simplify</button>
-      </div>
-
-      <div class="error" style="color: red"></div>
-      <label for="output">
-        <div>Simplified:</div>
-        <textarea style="width: 100%" name="output" id="output" readonly></textarea>
-      </label>
-      <h2 for="steps" style="display: none">Steps</h2>
-      <ul id="steps"></ul>
-    </form>
-    <h2>Grammar</h2>
-    <div id="grammar"></div>
-    <script type="module">
-      import { parse, simplify, toString, SET, LOGIC, POLISH, SOURCE, CODE } from "./bsimp.mjs";
-      const lookup = { SET, LOGIC, POLISH, SOURCE, CODE };
-      const form = document.querySelector('form');
-      const rules = {
-        absorption: {
-          name: 'Absorption',
-          href: 'https://en.wikipedia.org/wiki/Absorption_(logic)',
-          desc: 'A term is absorbed by virtue of it being used in adjacent expressions'
-        },
-        association: {
-          name: 'Association',
-          href: 'https://en.wikipedia.org/wiki/Associative_property',
-          desc: 'The subgroup can be rolled into the parent group, as they use the same operator',
-        },
-        collect: {
-          name: 'Collection',
-          href: 'https://en.wikipedia.org/wiki/Distributive_property',
-          desc: 'Like terms can be collected into a subgroup'
-        },
-        complement: {
-          name: 'Complementation',
-          href: 'https://en.wikipedia.org/wiki/Boolean_algebra#Nonmonotone_laws',
-          desc: 'A term is operated against its own complement, resulting in a constant'
-        },
-        consensus: {
-          name: 'Consensus',
-          href: 'https://en.wikipedia.org/wiki/Consensus_theorem',
-          desc: 'In a union of three or more intersections, two intersections contain a complement with each of the terms of another intersection.',
-        },
-        deMorgan: {
-          name: 'DeMorgan\'s law of complementation',
-          href: 'https://en.wikipedia.org/wiki/De_Morgan%27s_laws',
-          desc: 'To either get rid of a group negation, or to collapse a group into its parent via association, we can complement the group.',
-        },
-        distribute: {
-          name: 'Distribution',
-          href: 'https://en.wikipedia.org/wiki/Distributive_property',
-          desc: 'The groups can be cross-multiplied to flatten out the expression.'
-        },
-        identity: {
-          name: 'Identity',
-          href: 'https://en.wikipedia.org/wiki/Boolean_algebra#Monotone_laws',
-          desc: 'An expression against a constant that will result in that constant.',
-        },
-        tautology: {
-          name: 'Tautology',
-          href: 'https://en.wikipedia.org/wiki/Boolean_algebra#Monotone_laws',
-          desc: 'An expression against a constant which results in no change in value.',
-        },
-      };
-      const process = () => {
-        const expr = form.querySelector('#input').value
-        const mode = form.querySelector('#mode').value;
-        const e = parse(expr);
-        simplify.log(1);
-        const steps = [];
-        const s = simplify(e, steps);
-        const out = toString(s, lookup[mode]);
-        document.querySelector('#output').value = out;
-        const stepList = document.querySelector('#steps');
-        while (stepList.children.length) {
-          stepList.removeChild(stepList.firstChild);
-        }
-        steps.forEach(([step, parentOp, from, to]) => {
-          if (!(step in rules)) return;
-          const { name, href, desc } = rules[step];
-          const item = document.createElement('li');
-          const main = document.createElement('div');
-          const p = parentOp ? toString(parentOp, lookup[mode]) : '';
-          const f = toString(from, lookup[mode]);
-          const t = toString(to, lookup[mode]);
-          const link = document.createElement('a');
-          link.target = '_blank';
-          link.href = href;
-          link.textContent = `${name}${p ? ` (${p})` : ''}`;
-          main.appendChild(link);
-          main.appendChild(document.createTextNode(`: ${f} ⇨ ${t}`));
-          item.appendChild(main);
-          const explanation = document.createElement('aside');
-          explanation.textContent = desc;
-          item.appendChild(explanation);
-          stepList.appendChild(item);
-          document.querySelector('*[for=steps]').style.display = '';
-        });
-      };
-      const submit = (event) => {
-        const err = form.querySelector('.error');
-        try {
-          err.textContent = '';
-          process();
-        } catch (e) {
-          err.textContent = e.message;
-          console.warn(e);
-        }
-        event.preventDefault();
-        return false;
-      };
-      form.addEventListener('submit', submit);
-      form.querySelector('#mode').addEventListener('change', () => {
-        try {
-          process();
-        } catch (e) { /*  */ }
-      });
-      form.querySelector('textarea').addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' && event.ctrlKey) {
-          submit(event);
-        }
-      });
-      (async () => {
-        const subD = new DOMParser().parseFromString(await fetch('./boolGrammar.html').then(r => r.text()), 'text/html')
-        const dest = document.querySelector('#grammar');
-        [...subD.querySelectorAll('body>*')].forEach((node) => {
-          dest.appendChild(document.importNode(node, true));
-        });
-        [...subD.querySelectorAll('head>*')].forEach((node) => {
-          document.head.appendChild(document.importNode(node, true));
-        });
-        ['h1', 'h2'].forEach(s => {
-          const h = dest.querySelector(s);
-          h.parentNode.removeChild(h);
-        })
-      })();
-    </script>
+    <div id="app"></div>
+    <script type="module" src="./demo/index.mjs"></script>
   </body>
 </html>

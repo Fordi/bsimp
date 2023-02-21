@@ -1,0 +1,21 @@
+
+body {
+  max-width: 6in;
+  min-height: 100vh;
+  margin: 0 auto;
+  font: 16px sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+.rule {
+  padding-top: 0 !important;
+}
+.error {
+  color: red;
+}
+textarea {
+  width: 100%;
+}
+thead {
+  background: rgba(1, 1, 1, 0.1);
+}
