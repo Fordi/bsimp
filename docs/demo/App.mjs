@@ -9,6 +9,25 @@ import { ForeignDocument } from './ForeignDocument.mjs';
 import { VennIcon } from './VennIcon.mjs';
 import { ShortcutIcon } from './ShortcutIcon.mjs';
 
+const PegError = ({ error, expr }) => {
+  if (!error) return null;
+  return html`
+    <div class="error">
+      ${error?.message}
+      ${error?.location && html`
+        <pre>
+          ${expr}
+          ${'\n'}
+          ${new Array(error.location.start.offset).join(' ')}
+          ${'>'}
+          ${new Array(error.location.end.offset - error.location.start.offset + 1).join(' ')}
+          ${'<'}
+        </pre>
+      `}
+    </div>
+  `;
+};
+
 export const App = () => {
   const inpRef = useRef(null);
   const [mode, setMode] = useSharedState('mode', Object.keys(modes)[0]);
@@ -31,10 +50,21 @@ export const App = () => {
       setOut(toString(s, modes[mode]));
       setError(undefined);
       setSteps(steps);
+      requestAnimationFrame(() => {
+        inpRef.current.focus();
+      });
     } catch (e) {
+      console.warn(e);
       setError(e);
       setOut('');
       setSteps([]);
+      requestAnimationFrame(() => {
+        inpRef.current.focus();
+        if (e.location) {
+          const { start, end } = e.location;
+          inpRef.current.setSelectionRange(start.offset, end.offset);
+        }
+      });
     }
   }, [mode, expr]);
   const onKeyDown = (e) => {
@@ -75,7 +105,7 @@ export const App = () => {
         <div className="actions">
           <button onClick=${onSimplify}>Simplify</button>
         </div>
-        <div class="error">${error?.message}</div>
+        <${PegError} error=${error} expr=${expr} />
         <label className="output">
           <div>Simplified:</div>
           <textarea readonly>${out}</textarea>
