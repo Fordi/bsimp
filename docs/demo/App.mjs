@@ -37,6 +37,14 @@ export const App = () => {
       setSteps([]);
     }
   }, [mode, expr]);
+  const onKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      onSimplify();
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+  };
   
   return html`
     <${ShortcutIcon} icon=${VennIcon} size="16" color="red" />
@@ -50,14 +58,18 @@ export const App = () => {
       <div className="form">
         <label htmlFor="input">
           <div>Enter expression:</div>
-          <textarea autofocus id="input" ref=${inpRef}>${expr}</textarea>
+          <textarea autofocus onKeyDown=${onKeyDown} id="input" ref=${inpRef}>${expr}</textarea>
         </label>
         <label htmlFor="mode">
           <span>
             Output style:
           </span>
           <select id="mode" onChange=${onModeChange}>
-            ${Object.keys(modes).map((key) => html`<option>${key}</option>`)}
+            ${Object.keys(modes).map((key) => html`
+              <option ...${key === mode && { selected: true }}>
+                ${key}
+              </option>
+            `)}
           </select>
         </label>
         <div className="actions">
