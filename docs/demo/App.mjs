@@ -24,9 +24,9 @@ export const App = () => {
   };
   useEffect(() => {
     if (!expr) return;
-    const e = parse(expr);
-    const steps = [];
     try {
+      const e = parse(expr);
+      const steps = [];
       const s = simplify(e, steps);
       setOut(toString(s, modes[mode]));
       setError(undefined);
